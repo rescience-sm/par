@@ -216,6 +216,7 @@
         </button>
     </div>
 
+    <!-- Student Modal -->
     <div id="student-modal" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-900/80 z-[110] hidden items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col slide-up border border-slate-200 dark:border-slate-700">
             <div class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 sm:p-6 flex justify-between items-center shrink-0">
@@ -234,6 +235,12 @@
             
             <div class="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar bg-slate-50 dark:bg-slate-900">
                 <button id="btn-student-finance-mobile" onclick="window.openTuitionConfigModal(this.dataset.studentid)" class="sm:hidden w-full mb-6 bg-par-gold text-slate-800 py-3 rounded-xl font-bold flex justify-center items-center shadow-sm"><i class="fa-solid fa-coins mr-2"></i>Postavke Školarine</button>
+                
+                <!-- Obogaćen status studenta (Dummy Bio) -->
+                <div id="modal-student-bio" class="text-sm text-slate-600 dark:text-slate-300 mb-6 bg-blue-50/50 dark:bg-slate-800 p-5 rounded-2xl border border-blue-100 dark:border-slate-700 leading-relaxed shadow-inner">
+                    <!-- Dinamički se puni JS-om -->
+                </div>
+
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-center"><p class="text-xs text-slate-500 font-bold uppercase mb-1">Godina</p><p id="modal-student-year" class="text-2xl font-black text-par-blue dark:text-blue-400">1.</p></div>
                     <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-center"><p class="text-xs text-slate-500 font-bold uppercase mb-1">Status</p><p id="modal-student-status" class="text-lg mt-1 font-black text-slate-700 dark:text-slate-300">Redovni</p></div>
@@ -304,7 +311,7 @@
     </div>
 
     <div id="employee-modal" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-900/80 z-[110] hidden items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col slide-up border border-slate-200 dark:border-slate-700">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col slide-up border border-slate-200 dark:border-slate-700">
             <div class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-6 flex justify-between items-center relative shrink-0">
                 <div class="flex items-center space-x-4">
                     <div id="modal-employee-initial" class="w-14 h-14 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-2xl font-black text-white shadow-md">A</div>
@@ -329,11 +336,30 @@
                     <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 text-center"><p class="text-[10px] font-bold text-slate-500 uppercase">Projekti</p><p id="modal-employee-proj-count" class="text-2xl font-black text-indigo-500 mt-1">0</p></div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div><h4 class="text-lg font-black mb-4 dark:text-white"><i class="fa-solid fa-briefcase mr-2 text-indigo-500"></i>Aktivni projekti</h4><div id="modal-employee-projects" class="flex flex-col gap-2"></div></div>
                     <div>
                         <h4 class="text-lg font-black mb-4 dark:text-white"><i class="fa-solid fa-plane-departure mr-2 text-blue-500"></i>Putni nalozi (2026)</h4>
-                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700"><ul id="modal-employee-travel-list" class="space-y-3 text-sm text-slate-600 dark:text-slate-400"></ul></div>
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 h-full"><ul id="modal-employee-travel-list" class="space-y-3 text-sm text-slate-600 dark:text-slate-400"></ul></div>
+                    </div>
+                </div>
+
+                <!-- Nova sekcija: Znanstveni radovi djelatnika -->
+                <div>
+                    <h4 class="text-lg font-black mb-4 dark:text-white"><i class="fa-solid fa-book-journal-whills mr-2 text-rose-500"></i>Znanstveni radovi (Tekuća godina)</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-slate-100/50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-3"><i class="fa-solid fa-pen-nib mr-1 text-slate-400"></i>U pisanju (Drafting)</p>
+                            <ul id="modal-emp-papers-drafting" class="space-y-2"></ul>
+                        </div>
+                        <div class="bg-slate-100/50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-3"><i class="fa-solid fa-user-check mr-1 text-amber-500"></i>Recenzija (Peer Review)</p>
+                            <ul id="modal-emp-papers-review" class="space-y-2"></ul>
+                        </div>
+                        <div class="bg-slate-100/50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+                            <p class="text-xs font-bold text-slate-500 uppercase mb-3"><i class="fa-solid fa-award mr-1 text-green-500"></i>Objavljeno (Published)</p>
+                            <ul id="modal-emp-papers-published" class="space-y-2"></ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -382,7 +408,7 @@
                     <div>
                         <label class="block text-sm font-semibold mb-2 dark:text-slate-300">Tip zahtjeva</label>
                         <select required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 dark:text-white outline-none focus:border-par-blue">
-                            <option value="">Odaberite tip...</option><option>Prijepis ocjena</option><option>Potvrda o statusu studenta</option><option>Mirovanje obveza</option><option>Prijava teme završnog rada</option>
+                            <option value="">Odaberite tip...</option><option>Prijepis ocjena</option><option>Potvrda o statusu studenta</option><option>Mirovanje obveza</option><option>Prijava teme završnog rada</option><option>Ispis iz sustava</option>
                         </select>
                     </div>
                     <div><label class="block text-sm font-semibold mb-2 dark:text-slate-300">Obrazloženje / Napomena</label><textarea rows="3" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 dark:text-white resize-none focus:border-par-blue"></textarea></div>
@@ -412,7 +438,8 @@
                     <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700 text-center"><p class="text-xs text-slate-400 uppercase font-bold mb-1">Opterećenje</p><p id="modal-course-opt" class="font-black text-lg dark:text-white">-</p></div>
                 </div>
                 <h4 class="font-bold text-lg dark:text-white mb-3">Opis kolegija</h4>
-                <p id="modal-course-desc" class="text-sm text-slate-600 dark:text-slate-400 mb-6 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700"></p>
+                <!-- Obogaćen opis -->
+                <p id="modal-course-desc" class="text-sm text-slate-600 dark:text-slate-300 mb-6 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 leading-relaxed"></p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700"><h4 class="font-bold text-sm uppercase text-par-blue dark:text-blue-400 mb-3">Ishodi učenja</h4><ul id="modal-course-outcomes" class="list-disc pl-5 text-sm text-slate-600 dark:text-slate-400 space-y-2"></ul></div>
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700"><h4 class="font-bold text-sm uppercase text-par-gold mb-3">Literatura</h4><ul id="modal-course-lit" class="list-disc pl-5 text-sm text-slate-600 dark:text-slate-400 space-y-2"></ul></div>
@@ -469,9 +496,13 @@
         <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col slide-up border border-slate-200 dark:border-slate-700">
             <div class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-6 flex justify-between items-start">
                 <div><h3 id="td-type" class="font-bold text-xl dark:text-white mb-1">Zamolba</h3><p id="td-student" class="text-sm font-medium text-slate-500">Student</p></div>
-                <button onclick="closeModal('request-details-modal')" class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center hover:bg-slate-300 transition"><i class="fa-solid fa-xmark"></i></button>
+                <div class="flex items-center space-x-2">
+                    <button id="btn-export-request-pdf" class="bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 px-3 py-1.5 rounded-xl text-sm font-bold shadow-sm transition"><i class="fa-solid fa-file-pdf mr-1"></i> Izvoz</button>
+                    <button onclick="closeModal('request-details-modal')" class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center hover:bg-slate-300 transition"><i class="fa-solid fa-xmark"></i></button>
+                </div>
             </div>
             <div class="p-6 overflow-y-auto">
+                <div id="td-details" class="mb-6 text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700"></div>
                 <h4 class="font-bold text-sm text-slate-500 uppercase tracking-wider mb-4">Vremenska lenta (Tijek)</h4>
                 <div id="td-timeline" class="relative border-l-2 border-slate-200 dark:border-slate-700 ml-3 space-y-6"></div>
             </div>
@@ -523,7 +554,7 @@
                     case 'TOGGLE_DARK_MODE': this.state.darkMode = payload; break;
                     case 'SET_USER': this.state.user = payload.user; this.state.role = payload.role; break;
                     case 'SET_CALENDAR_VIEW': this.state.calendarView = payload; break;
-                    case 'SET_SCHEDULE_VIEW': this.state.scheduleView = payload; break; // Added for schedule
+                    case 'SET_SCHEDULE_VIEW': this.state.scheduleView = payload; break; 
                     case 'ADD_NOTIFICATION': this.state.notifications = [payload, ...(this.state.notifications || [])]; break;
                 }
             }
@@ -591,14 +622,14 @@
             finances: [], grades: [], vacations: [], requests: [], 
             documents: [], calendarEvents: [], exams: [], labs: [], 
             research: [], alumniEvents: [], enrolledCourses: [1, 3, 4],
-            employeeSchedules: [] // New data structure for employee schedules
+            employeeSchedules: [] 
         };
         
         let chart1 = null; let chart2 = null; let chart3 = null;
 
         window.refreshMonthlyCalendarEvents = function() {
             DUMMY_DATA.calendarEvents = [];
-            const courseColors = { 'Strateški menadžment': 'blue', 'Krizni menadžment': 'red', 'EU Projektni menadžment': 'indigo', 'Osnove programiranja': 'green', 'Baze podataka': 'amber', 'Poslovna inteligencija': 'purple' };
+            const courseColors = { 'Osnove ekonomije': 'blue', 'Menadžment': 'red', 'Poduzetništvo i inovacije': 'indigo', 'Strateški menadžment': 'green', 'Računovodstvo': 'amber', 'Digitalni marketing': 'purple', 'Krizni menadžment': 'indigo', 'Menadžment sportskih događaja': 'amber', 'Menadžment ljudskih potencijala': 'teal', 'EU fondovi i projektni menadžment': 'red' };
             DUMMY_DATA.courses.forEach(c => {
                 let targetDay = 3;
                 if(c.day === 'Pon') targetDay = 10;
@@ -612,7 +643,6 @@
             DUMMY_DATA.calendarEvents.push({ day: 15, text: 'Velika Gospa (Neradni dan)', color: 'amber' });
         };
 
-        // Initialize dummy data for Employee Schedules
         function generateEmployeeSchedules() {
             const activities = ['Na poslu (Ured)', 'Nastava', 'Godišnji odmor (GO)', 'Bolovanje', 'Putni nalog', 'Rad od kuće', 'Slobodan dan'];
             const colors = {
@@ -626,11 +656,10 @@
             };
 
             DUMMY_DATA.employees.forEach(emp => {
-                // Generate a generic schedule for a week (e.g., Aug 10 - Aug 16)
                 for(let i = 10; i <= 16; i++) {
-                    let activity = 'Na poslu (Ured)'; // Default
-                    if (i === 15) activity = 'Slobodan dan'; // Velika Gospa
-                    else if (i === 16) activity = 'Slobodan dan'; // Sunday
+                    let activity = 'Na poslu (Ured)'; 
+                    if (i === 15) activity = 'Slobodan dan';
+                    else if (i === 16) activity = 'Slobodan dan'; 
                     else if (emp.goUsed > 0 && Math.random() > 0.8) activity = 'Godišnji odmor (GO)';
                     else if (emp.sickLeave > 0 && Math.random() > 0.9) activity = 'Bolovanje';
                     else if (emp.travelOrders > 0 && Math.random() > 0.85) activity = 'Putni nalog';
@@ -640,49 +669,52 @@
                     if (activity === 'Nastava') hours = (Math.floor(Math.random() * 4) * 2 + 8) + ':00 - ' + (Math.floor(Math.random() * 4) * 2 + 10) + ':00';
 
                     DUMMY_DATA.employeeSchedules.push({
-                        empId: emp.id,
-                        empName: emp.name,
-                        date: `2026-08-${i.toString().padStart(2, '0')}`,
-                        day: i,
-                        activity: activity,
-                        hours: hours,
-                        color: colors[activity]
+                        empId: emp.id, empName: emp.name, date: `2026-08-${i.toString().padStart(2, '0')}`,
+                        day: i, activity: activity, hours: hours, color: colors[activity]
                     });
                 }
             });
         }
 
         (function generateBigData() {
+            // 10 PAR Real-like Courses
             DUMMY_DATA.courses = [
-                { id: 1, title: 'Strateški menadžment', ects: 7, prof: 'prof. dr. sc. Sven Maričić', sem: 'Zimski', tip: 'Obvezni', opterećenje: '30P + 30V', day: 'Pon', timeStart: 16, timeEnd: 18, dvorana: 'Dvorana 1', description: 'Kolegij pruža napredna znanja o procesima strateškog planiranja.', outcomes: ['Kritički procijeniti poziciju.', 'Izraditi prijedlog strategije.'], literature: ['Buble, M. (2010) Strateški menadžment.'] },
-                { id: 2, title: 'Krizni menadžment', ects: 6, prof: 'Maja Marić, v. pred.', sem: 'Zimski', tip: 'Izborni', opterećenje: '30P + 15V', day: 'Uto', timeStart: 16, timeEnd: 18, dvorana: 'Dvorana 2', description: 'Razumijevanje ciklusa krize.', outcomes: ['Identificirati rane signale.', 'Dizajnirati plan komuniciranja.'], literature: ['Kešetović, Ž. (2008) Krizni menadžment.'] },
-                { id: 3, title: 'EU Projektni menadžment', ects: 6, prof: 'izv.prof. Gordana Nikolić', sem: 'Ljetni', tip: 'Obvezni', opterećenje: '30P + 30V', day: 'Sri', timeStart: 14, timeEnd: 16, dvorana: 'Dvorana 1', description: 'Praktične vještine za pripremu EU projekata.', outcomes: ['Definirati logičku matricu.', 'Izraditi troškovnik.'], literature: ['EU Priručnik (2014)'] },
-                { id: 4, title: 'Osnove programiranja', ects: 6, prof: 'Tomo Tomić, pred.', sem: 'Zimski', tip: 'Obvezni', opterećenje: '30P + 30V', day: 'Pon', timeStart: 16, timeEnd: 18, dvorana: 'IT Lab 1', description: 'Uvod u Python ekosustav.', outcomes: ['Pisati algoritme.', 'Implementirati klase.'], literature: ['Lutz, M. Learning Python.'] },
-                { id: 5, title: 'Baze podataka', ects: 5, prof: 'Tomo Tomić, pred.', sem: 'Ljetni', tip: 'Obvezni', opterećenje: '30P + 15V', day: 'Čet', timeStart: 10, timeEnd: 12, dvorana: 'IT Lab 1', description: 'Relacijski modeli podataka.', outcomes: ['Pisati SQL upite.', 'Dizajnirati sheme.'], literature: ['Garcia-Molina (2008) DB Systems.'] },
-                { id: 6, title: 'Poslovna inteligencija', ects: 6, prof: 'prof. dr. sc. Sven Maričić', sem: 'Ljetni', tip: 'Izborni', opterećenje: '15P + 30V', day: 'Pet', timeStart: 12, timeEnd: 14, dvorana: 'IT Lab 2', description: 'Metode za donošenje poslovnih odluka.', outcomes: ['Koristiti PowerBI.', 'Dizajnirati skladište podataka.'], literature: ['Panian, Ž. Poslovna inteligencija.'] }
+                { id: 1, title: 'Osnove ekonomije', ects: 6, prof: 'prof. dr. sc. Bisera Karanović', sem: 'Zimski', tip: 'Obvezni', opterećenje: '30P + 30S', day: 'Pon', timeStart: 8, timeEnd: 10, dvorana: 'Dvorana PAR', description: 'Kolegij upoznaje studente s osnovnim ekonomskim pojmovima, funkcioniranjem mikroekonomije i makroekonomije, s naglaskom na suvremene gospodarske trendove u Hrvatskoj i svijetu.', outcomes: ['Definirati osnovne ekonomske pojmove (ponuda, potražnja, elastičnost).', 'Analizirati utjecaj makroekonomskih agregata (BDP, inflacija, nezaposlenost).', 'Kritički promišljati o utjecaju globalizacije na nacionalna gospodarstva.'], literature: ['Samuelson, P. A., Nordhaus, W. D. (2011). Ekonomija. MATE, Zagreb.', 'Krugman, P., Wells, R. (2015). Economics. Worth Publishers.'] },
+                { id: 2, title: 'Menadžment', ects: 7, prof: 'izv. prof. dr. sc. Gordana Nikolić', sem: 'Zimski', tip: 'Obvezni', opterećenje: '45P + 15S', day: 'Uto', timeStart: 10, timeEnd: 12, dvorana: 'Dvorana 1', description: 'Usvajanje temeljnih teorijskih i praktičnih znanja iz područja menadžmenta, usvajanje faza menadžerskog procesa (planiranje, organiziranje, kadroviranje, vođenje i kontroliranje) i uloge menadžera.', outcomes: ['Razumjeti i razlikovati osnovne funkcije menadžmenta.', 'Primijeniti metode planiranja i organiziranja na poslovni slučaj.', 'Prepoznati i evaluirati različite stilove vođenja timova.'], literature: ['Buble, M. (2006). Osnove menadžmenta. Sinergija, Zagreb.', 'Robbins, S.P., Coulter, M. (2020). Management. Pearson.'] },
+                { id: 3, title: 'Poduzetništvo i inovacije', ects: 6, prof: 'prof. dr. sc. Sven Maričić', sem: 'Ljetni', tip: 'Obvezni', opterećenje: '30P + 30V', day: 'Sri', timeStart: 12, timeEnd: 14, dvorana: 'Inkubator', description: 'Osposobljavanje studenata za razumijevanje poduzetničkog procesa, prepoznavanje poslovnih prilika i implementaciju inovacija u suvremeno poslovanje koristeći alate poput Business Model Canvasa.', outcomes: ['Kritički procijeniti poduzetničku ideju i tržišni potencijal.', 'Izraditi cjeloviti poslovni plan za startup.', 'Primijeniti tehnike design thinkinga u razvoju inovacija.'], literature: ['Kuratko, D. F. (2016). Entrepreneurship: Theory, Process, and Practice.', 'Osterwalder, A., Pigneur, Y. (2010). Business Model Generation.'] },
+                { id: 4, title: 'Računovodstvo', ects: 6, prof: 'mr. sc. Ana Turčić', sem: 'Zimski', tip: 'Obvezni', opterećenje: '30P + 30V', day: 'Čet', timeStart: 8, timeEnd: 10, dvorana: 'Dvorana 2', description: 'Kolegij pruža temeljna znanja o računovodstvenom praćenju poslovnih događaja, sastavljanju temeljnih financijskih izvještaja te razumijevanju zakonskog okvira računovodstva u RH.', outcomes: ['Knjižiti osnovne poslovne promjene na računima glavne knjige.', 'Sastaviti bilancu i račun dobiti i gubitka.', 'Tumačiti osnovne pokazatelje financijskog poslovanja.'], literature: ['Gulin, D. i sur. (2011). Računovodstvo. Hrvatska zajednica računovođa.', 'Zakon o računovodstvu RH (Narodne novine).'] },
+                { id: 5, title: 'Menadžment sportskih događaja', ects: 5, prof: 'doc. dr. sc. Marko Kučić', sem: 'Ljetni', tip: 'Izborni', opterećenje: '30P + 15S', day: 'Pon', timeStart: 16, timeEnd: 18, dvorana: 'Dvorana 1', description: 'Upravljanje sportskim i turističkim događajima od koncepcije i planiranja do provedbe i evaluacije. Poseban naglasak stavlja se na logistiku, marketing i financiranje događaja (sponzorstva).', outcomes: ['Planirati i strukturirati vremenski okvir sportskog događaja.', 'Izraditi plan sponzorstava i budžetiranja.', 'Upravljati rizicima specifičnima za masovne događaje.'], literature: ['Masterman, G. (2014). Strategic Sports Event Management.', 'Prezentacije i studije slučaja Veleučilišta PAR.'] },
+                { id: 6, title: 'Strateški menadžment', ects: 6, prof: 'prof. dr. sc. Sven Maričić', sem: 'Zimski', tip: 'Obvezni', opterećenje: '30P + 30V', day: 'Uto', timeStart: 14, timeEnd: 16, dvorana: 'Dvorana 2', description: 'Kolegij se bavi formuliranjem, implementacijom i evaluacijom poslovne strategije u dinamičnom okruženju, pripremajući studente za donošenje kompleksnih korporativnih odluka.', outcomes: ['Sprovesti internu i eksternu analizu (SWOT, PESTLE, Porter).', 'Razviti strategiju rasta na razini korporacije.', 'Integrirati kontrolne mehanizme za praćenje ostvarenja strategije.'], literature: ['Buble, M. et al. (2010). Strateški menadžment.', 'David, F. R. (2011). Strategic Management: Concepts and Cases.'] },
+                { id: 7, title: 'Krizni menadžment', ects: 5, prof: 'Maja Marić, v. pred.', sem: 'Ljetni', tip: 'Izborni', opterećenje: '30P + 15V', day: 'Sri', timeStart: 16, timeEnd: 18, dvorana: 'Dvorana 1', description: 'Razumijevanje faza razvoja krize i usvajanje metoda i tehnika kriznog komuniciranja i upravljanja kontinuitetom poslovanja u izvanrednim situacijama.', outcomes: ['Identificirati rane signale potencijalne poslovne krize.', 'Izraditi detaljan plan kriznog komuniciranja za odnose s javnošću.', 'Koordinirati timom za oporavak poslovanja (Disaster Recovery).'], literature: ['Kešetović, Ž. (2008). Krizni menadžment.', 'Coombs, W. T. (2014). Ongoing Crisis Communication.'] },
+                { id: 8, title: 'EU fondovi i projektni menadžment', ects: 6, prof: 'izv. prof. dr. sc. Gordana Nikolić', sem: 'Zimski', tip: 'Obvezni', opterećenje: '30P + 30V', day: 'Čet', timeStart: 12, timeEnd: 14, dvorana: 'Dvorana PAR', description: 'Praktične vještine potrebne za identifikaciju prilika, pripremu projektne dokumentacije i upravljanje EU projektima (PCM metodologija, logička matrica).', outcomes: ['Samostalno ispuniti i oblikovati logičku matricu projekta.', 'Razviti detaljan i opravdan troškovnik.', 'Razumjeti pravila izvještavanja (narativno i financijsko).'], literature: ['Priručnik za upravljanje projektnim ciklusom (Europska komisija).', 'Skripta Veleučilišta PAR: EU projekti (2024).'] },
+                { id: 9, title: 'Digitalni marketing', ects: 6, prof: 'doc. dr. sc. Ivan Babić', sem: 'Ljetni', tip: 'Obvezni', opterećenje: '30P + 30V', day: 'Pet', timeStart: 10, timeEnd: 12, dvorana: 'IT Lab 1', description: 'Kolegij obrađuje suvremene alate digitalnog marketinga: SEO optimizaciju, oglašavanje na društvenim mrežama, content marketing i web analitiku (Google Analytics).', outcomes: ['Kreirati kampanju na platformama Google Ads i Meta.', 'Analizirati metrike uspješnosti web stranice (ROI, CTR, Bounce rate).', 'Oblikovati cjelovitu digitalnu strategiju za proizvod/uslugu.'], literature: ['Chaffey, D., Ellis-Chadwick, F. (2019). Digital Marketing.', 'Službena dokumentacija: Google Analytics Academy.'] },
+                { id: 10, title: 'Menadžment ljudskih potencijala', ects: 6, prof: 'Martina Jurković, pred.', sem: 'Zimski', tip: 'Obvezni', opterećenje: '30P + 30S', day: 'Pet', timeStart: 14, timeEnd: 16, dvorana: 'Dvorana 2', description: 'Sveobuhvatan pregled procesa upravljanja zaposlenicima: od analize posla i regrutacije do selekcije, razvoja karijere, motivacije, nagrađivanja i zadržavanja talenata.', outcomes: ['Provoditi strukturirani selekcijski intervju.', 'Dizajnirati sustav pravednog nagrađivanja zaposlenika.', 'Mjeriti radnu uspješnost (Performance Management).'], literature: ['Bahtijarević-Šiber, F. (1999). Management ljudskih potencijala.', 'Dessler, G. (2016). Human Resource Management.'] }
             ];
 
             DUMMY_DATA.projects = [
                 { id: 1, name: 'Eu4Dual', duration: '36 mjeseci', fundingLine: 'Erasmus+', budget: '€ 1,200,000', startDate: '01.09.2023', endDate: '31.08.2026', partners: ['DHBW Heilbronn (DE)', 'Mondragon Unibertsitatea (ES)', 'Savonia UAS (FI)'], description: 'Projekt usmjeren na formiranje najvećeg Europskog dualnog sveučilišta. Cilj je razvoj standarda mikrokredencijala za industriju.', wps: ['WP1: Upravljanje', 'WP2: Okvir dualnog obrazovanja', 'WP3: Zajednički mikrokredencijali', 'WP4: Istraživanje i inovacije', 'WP5: Mobilnost', 'WP6: Osiguranje kvalitete'], professors: [], students: ['Luka Jurić', 'Ema Novak'] },
                 { id: 2, name: 'CreativeStartup', duration: '24 mjeseca', fundingLine: 'ESF+', budget: '€ 450,000', startDate: '01.01.2025', endDate: '31.12.2026', partners: ['Inkubator Rijeka', 'STEP RI'], description: 'Poticanje studentskog poduzetništva kroz formiranje hibridnog kreativnog inkubatora.', wps: ['WP1: Vođenje projekta', 'WP2: Analiza startup sustava', 'WP3: Razvoj inkubatora', 'WP4: Edukacija i mentorstvo', 'WP5: Razvoj platforme', 'WP6: Pilot testiranje'], professors: [], students: ['Filip Horvat'] },
-                { id: 3, name: 'CreativeAIHub', duration: '36 mjeseci', fundingLine: 'Horizon Europe', budget: '€ 890,000', startDate: '01.06.2024', endDate: '31.05.2027', partners: ['AI Institute Austria', 'TechInnovate d.o.o.'], description: 'Implementacija umjetne inteligencije u edukativne procese visokog obrazovanja.', wps: ['WP1: Management', 'WP2: AI Lab Setup', 'WP3: Razvoj kurikuluma', 'WP4: B2B Partnerstva', 'WP5: Etika u AI sustavima'], professors: [], students: ['Mia Kovač', 'Tin Rožić'] },
-                { id: 4, name: 'EuManagerial', duration: '24 mjeseca', fundingLine: 'Erasmus+ CBHE', budget: '€ 350,000', startDate: '15.10.2024', endDate: '14.10.2026', partners: ['University of Sarajevo', 'Montenegro Business School'], description: 'Prijenos menadžerskih vještina i najboljih EU praksi u zemlje regije.', wps: ['WP1: Priprema', 'WP2: Razvoj kurikuluma', 'WP3: Trening predavača', 'WP4: Diseminacija'], professors: [], students: [] },
-                { id: 5, name: 'PARsport', duration: '18 mjeseci', fundingLine: 'Erasmus+ Sport', budget: '€ 120,000', startDate: '01.01.2026', endDate: '30.06.2027', partners: ['Hrvatski Olimpijski Odbor', 'Sportski Savez PGŽ'], description: 'Promocija dualnih karijera sportaša studenata i razvoj online modela studiranja.', wps: ['WP1: Management', 'WP2: Kurikulum', 'WP3: Sportska događanja'], professors: [], students: ['Jakov Grgić'] },
-                { id: 6, name: 'DigiEdu', duration: '24 mjeseca', fundingLine: 'NPOO', budget: '€ 500,000', startDate: '01.03.2025', endDate: '28.02.2027', partners: ['Ministarstvo znanosti'], description: 'Potpuna digitalna transformacija učionica Veleučilišta PAR i nabava opreme.', wps: ['WP1: Nabava', 'WP2: Edukacija', 'WP3: Evaluacija'], professors: [], students: [] },
-                { id: 7, name: 'StudentNet', duration: '12 mjeseci', fundingLine: 'Ministarstvo turizma', budget: '€ 80,000', startDate: '01.05.2026', endDate: '30.04.2027', partners: ['TZ Rijeka'], description: 'Razvoj studenskih turističkih vodiča temeljenih na proširenoj stvarnosti.', wps: ['WP1: Koordinacija', 'WP2: AR Aplikacija', 'WP3: Promocija'], professors: [], students: ['Ana Horvat', 'Karlo Knez'] },
-                { id: 8, name: 'GreenCampus', duration: '24 mjeseca', fundingLine: 'Interreg', budget: '€ 650,000', startDate: '01.01.2025', endDate: '31.12.2026', partners: ['Univerza v Ljubljani'], description: 'Ozelenjavanje kampusa i razvoj održivih rješenja za visoka učilišta.', wps: ['WP1: Priprema', 'WP2: Solarni paneli', 'WP3: Edukacija studenata'], professors: [], students: [] },
-                { id: 9, name: 'TechInnovate', duration: '36 mjeseci', fundingLine: 'Horizon Europe', budget: '€ 1,500,000', startDate: '01.09.2025', endDate: '31.08.2028', partners: ['MIT Europe', 'Ericsson Nikola Tesla'], description: 'Deep tech inovacije u poslovnom modeliranju.', wps: ['WP1: Management', 'WP2: R&D', 'WP3: Prototip', 'WP4: Tržište'], professors: [], students: [] }
+                { id: 3, name: 'CreativeAIHub', duration: '36 mjeseci', fundingLine: 'Horizon Europe', budget: '€ 890,000', startDate: '01.06.2024', endDate: '31.05.2027', partners: ['AI Institute Austria', 'TechInnovate d.o.o.'], description: 'Implementacija umjetne inteligencije u edukativne procese visokog obrazovanja.', wps: ['WP1: Management', 'WP2: AI Lab Setup', 'WP3: Razvoj kurikuluma', 'WP4: B2B Partnerstva', 'WP5: Etika u AI sustavima'], professors: [], students: ['Mia Kovač', 'Tin Rožić'] }
             ];
 
             DUMMY_DATA.employees = [
-                { id: 1, name: 'izv.prof. Gordana Nikolić', role: 'Dekanica', dept: 'Uprava', type: 'Uprava', email: 'uprava@par.hr', goUsed: 12, sickLeave: 0, travelOrders: 15, projects: ['Eu4Dual', 'CreativeAIHub', 'EuManagerial', 'PARsport', 'DigiEdu'], travelOrdersList: ['Brusseles - EU Commission (12.03.)'] },
-                { id: 2, name: 'prof. dr. sc. Sven Maričić', role: 'Pročelnik', dept: 'Katedra inovacije', type: 'Nastavnik', email: 'sven@par.hr', goUsed: 18, sickLeave: 5, travelOrders: 8, projects: ['CreativeStartup', 'EuManagerial', 'DigiEdu'], travelOrdersList: ['Split - Gostovanje (22.04.)'] },
-                { id: 3, name: 'Tomo Tomić, pred.', role: 'Predavač', dept: 'Katedra IT', type: 'Nastavnik', email: 'tomo@par.hr', goUsed: 0, sickLeave: 12, travelOrders: 0, projects: ['CreativeAIHub', 'DigiEdu', 'StudentNet', 'TechInnovate'], travelOrdersList: [] },
-                { id: 4, name: 'Marko IT', role: 'LabTech', dept: 'IT Služba', type: 'Administracija', email: 'lab@par.hr', goUsed: 8, sickLeave: 0, travelOrders: 2, projects: ['Eu4Dual', 'TechInnovate', 'CreativeAIHub'], travelOrdersList: ['Zagreb - Nabava (02.02.)'] },
-                { id: 5, name: 'Marina Srdoč', role: 'Voditeljica referade', dept: 'Stručne službe', type: 'Administracija', email: 'marina.srdoc@par.hr', goUsed: 14, sickLeave: 2, travelOrders: 1, projects: ['EuManagerial'], travelOrdersList: ['Zagreb - Edukacija (15.05.)'] },
-                { id: 6, name: 'Martina Jurković', role: 'Predavač', dept: 'Katedra za menadžment', type: 'Nastavnik', email: 'martina.jurkovic@par.hr', goUsed: 5, sickLeave: 0, travelOrders: 3, projects: ['CreativeStartup', 'PARsport'], travelOrdersList: ['Ljubljana - Konferencija (10.06.)'] },
-                { id: 7, name: 'Monica Milošević', role: 'Asistent', dept: 'Katedra za financije', type: 'Nastavnik', email: 'monica.milosevic@par.hr', goUsed: 2, sickLeave: 1, travelOrders: 0, projects: ['DigiEdu'], travelOrdersList: [] }
+                { id: 1, name: 'izv.prof. Gordana Nikolić', role: 'Dekanica', dept: 'Uprava', type: 'Uprava', email: 'uprava@par.hr', goUsed: 12, sickLeave: 0, travelOrders: 15, projects: ['Eu4Dual', 'CreativeAIHub'], travelOrdersList: ['Brusseles - EU Commission (12.03.)'] },
+                { id: 2, name: 'prof. dr. sc. Sven Maričić', role: 'Pročelnik', dept: 'Katedra inovacije', type: 'Nastavnik', email: 'sven@par.hr', goUsed: 18, sickLeave: 5, travelOrders: 8, projects: ['CreativeStartup'], travelOrdersList: ['Split - Gostovanje (22.04.)'] },
+                { id: 3, name: 'Tomo Tomić, pred.', role: 'Predavač', dept: 'Katedra IT', type: 'Nastavnik', email: 'tomo@par.hr', goUsed: 0, sickLeave: 12, travelOrders: 0, projects: ['CreativeAIHub'], travelOrdersList: [] },
+                { id: 4, name: 'Marko IT', role: 'LabTech', dept: 'IT Služba', type: 'Administracija', email: 'lab@par.hr', goUsed: 8, sickLeave: 0, travelOrders: 2, projects: ['Eu4Dual'], travelOrdersList: ['Zagreb - Nabava (02.02.)'] },
+                { id: 5, name: 'Marina Srdoč', role: 'Voditeljica referade', dept: 'Stručne službe', type: 'Administracija', email: 'marina.srdoc@par.hr', goUsed: 14, sickLeave: 2, travelOrders: 1, projects: [], travelOrdersList: ['Zagreb - Edukacija (15.05.)'] },
+                { id: 6, name: 'Martina Jurković, pred.', role: 'Predavač', dept: 'Katedra za menadžment', type: 'Nastavnik', email: 'martina.jurkovic@par.hr', goUsed: 5, sickLeave: 0, travelOrders: 3, projects: ['CreativeStartup'], travelOrdersList: ['Ljubljana - Konferencija (10.06.)'] }
             ];
+
+            // Generiranje znanstvenih radova za svakog zaposlenika
+            DUMMY_DATA.employees.forEach(emp => {
+                const year = new Date().getFullYear();
+                emp.papers = {
+                    drafting: [`Analiza trendova i transformacija modela u visokom obrazovanju (Glavni autor: ${emp.name})`, `Utjecaj AI na učenje i poučavanje - Empirijsko istraživanje`],
+                    review: [`Implementacija dualnog obrazovanja u Republici Hrvatskoj: Studija slučaja (${year}.)`, `Inovativni modeli kurikuluma (Časopis PAR)`],
+                    published: [`Znanstveni članak: Uloga inovacija u poslovanju, Zbornik PAR ${year}.`, `Poglavlje u knjizi: Nove tehnologije i društvo, Izdavač: Springer, ${year}.`]
+                };
+            });
 
             generateEmployeeSchedules();
 
@@ -710,26 +742,45 @@
                     img: `https://placehold.co/100x100/1e3a8a/ffffff?text=${sName.charAt(0)}${sName.split(' ')[1].charAt(0)}`,
                     risk: (!isAlumni && gpa < 2.5),
                     enrolled: DUMMY_DATA.courses.filter(() => Math.random() > 0.5).map(c => c.id),
-                    // Adding tuition specific properties
-                    tuitionBase: 3500,
-                    tuitionModel: 'installments_2',
-                    tuitionDiscount: Math.random() > 0.8 ? 10 : 0
+                    tuitionBase: 3500, tuitionModel: 'installments_2', tuitionDiscount: Math.random() > 0.8 ? 10 : 0
                 });
 
                 if (i <= 20) {
                     DUMMY_DATA.finances.push({ id: `RN-2026-${i}`, studentId: i, student: sName, type: i%3===0?'Upisnina':'Školarina 1. rata', amount: `€ ${(Math.floor(Math.random() * 1500)+100).toFixed(2)}`, status: i%2===0?'Plaćeno':'Dugovanje', due: `15.08.2026` });
                 }
-                if (i <= 15) {
-                    const p = ['Na čekanju', 'U obradi', 'Riješeno'][i % 3];
-                    const types = ['Prijepis ocjena', 'Potvrda o statusu studenta', 'Mirovanje obveza', 'Prijava teme završnog rada'];
-                    DUMMY_DATA.requests.push({ id: i, student: sName, type: types[i % types.length], date: `0${(i%9)+1}.08.2026 10:00`, status: p, priority: i%2===0?'Visok':'Srednji', history: [{d: `10:00`, t: 'Predano kroz sustav'}] });
+            }
+
+            // Enhanced Requests with rich timelines
+            for (let i = 1; i <= 25; i++) {
+                const sName = DUMMY_DATA.students[i].name;
+                const types = ['Prijepis ocjena', 'Potvrda o statusu studenta', 'Mirovanje obveza', 'Prijava teme završnog rada', 'Ispis iz baze'];
+                const statuses = ['Na čekanju', 'U obradi', 'Riješeno'];
+                const stat = statuses[Math.floor(Math.random() * statuses.length)];
+                
+                const history = [];
+                let d = (i%9)+1;
+                history.push({ d: `0${d}.08.2026 09:12`, t: `Zamolba predana kroz sustav e-Referade.` });
+                
+                if (stat === 'U obradi' || stat === 'Riješeno') {
+                    history.push({ d: `0${d}.08.2026 11:35`, t: `Djelatnik preuzeo zamolbu u obradu. (Marina Srdoč)` });
+                    history.push({ d: `0${d+1}.08.2026 10:15`, t: `Provjera uvjeta u ISVU i centralnoj bazi.` });
                 }
+                if (stat === 'Riješeno') {
+                    history.push({ d: `0${d+2}.08.2026 14:02`, t: `Zahtjev pozitivno riješen. Dokument generiran i poslan studentu na email.` });
+                }
+
+                DUMMY_DATA.requests.push({ 
+                    id: i, student: sName, type: types[i % types.length], 
+                    date: history[0].d, status: stat, priority: i%3===0?'Visok':'Srednji', 
+                    history: history,
+                    details: `Broj upisa u evidenciju: #${202600 + i}. Tip dokumenta koji se traži: ${types[i % types.length]}. Predano u svrhu reguliranja statusa za tekuću akademsku godinu.`
+                });
             }
 
             DUMMY_DATA.exams = [
-                { id: 1, course: 'Strateški menadžment', date: '10.09.2026', time: '10:00', room: 'Dvorana 1', capacity: 30, enrolled: 12, prof: 'prof. dr. sc. Sven Maričić' },
-                { id: 2, course: 'Osnove programiranja', date: '12.09.2026', time: '14:00', room: 'IT Lab 1', capacity: 20, enrolled: 18, prof: 'Tomo Tomić, pred.' },
-                { id: 3, course: 'EU Projektni menadžment', date: '15.09.2026', time: '16:00', room: 'Dvorana 2', capacity: 40, enrolled: 5, prof: 'izv.prof. Gordana Nikolić' }
+                { id: 1, course: 'Osnove ekonomije', date: '10.09.2026', time: '10:00', room: 'Dvorana PAR', capacity: 30, enrolled: 12, prof: 'prof. dr. sc. Bisera Karanović' },
+                { id: 2, course: 'Digitalni marketing', date: '12.09.2026', time: '14:00', room: 'IT Lab 1', capacity: 20, enrolled: 18, prof: 'doc. dr. sc. Ivan Babić' },
+                { id: 3, course: 'EU fondovi i projektni menadžment', date: '15.09.2026', time: '16:00', room: 'Dvorana 2', capacity: 40, enrolled: 5, prof: 'izv.prof. Gordana Nikolić' }
             ];
 
             DUMMY_DATA.labs = [
@@ -742,7 +793,7 @@
             DUMMY_DATA.research = [
                 { id: 1, title: 'AI Integration in EU Higher Education', authors: 'Maričić, S., Nikolić, G.', status: 'Peer Review', link: 'CreativeAIHub' },
                 { id: 2, title: 'Strategic Models for Startups', authors: 'Marić, M.', status: 'Drafting', link: 'CreativeStartup' },
-                { id: 3, title: 'Dual Career Sustainability', authors: 'Sanić, S.', status: 'Published', link: 'PARsport' }
+                { id: 3, title: 'Dual Career Sustainability', authors: 'Karanović, B.', status: 'Published', link: 'PARsport' }
             ];
 
             DUMMY_DATA.alumniEvents = [
@@ -751,8 +802,8 @@
             ];
 
             DUMMY_DATA.grades = [
-                { student: 'Ana Horvat', course: 'Strateški menadžment', grade: 5, date: '10.07.2026' },
-                { student: 'Ana Horvat', course: 'EU Projektni menadžment', grade: null, date: '-' }
+                { student: 'Ana Horvat', course: 'Osnove ekonomije', grade: 5, date: '10.07.2026' },
+                { student: 'Ana Horvat', course: 'Menadžment', grade: null, date: '-' }
             ];
             DUMMY_DATA.vacations = [
                 { id: 1, employee: 'izv.prof. Gordana Nikolić', period: '15.08 - 30.08', status: 'Odobreno', days: 10 },
@@ -949,12 +1000,11 @@
                 </div>
             `,
             schedule: (state) => {
-                // Determine current view (day, week, month)
                 const view = state.scheduleView || 'day';
                 let htmlContent = '';
 
                 if (view === 'day') {
-                    const todayDate = '2026-08-10'; // Using hardcoded today for dummy data scope
+                    const todayDate = '2026-08-10';
                     const todaySchedules = DUMMY_DATA.employeeSchedules.filter(s => s.date === todayDate);
                     
                     htmlContent = `
@@ -990,7 +1040,7 @@
                         </div>
                     `;
                 } else if (view === 'week') {
-                    const weekDays = [10, 11, 12, 13, 14, 15, 16]; // Mon-Sun dates
+                    const weekDays = [10, 11, 12, 13, 14, 15, 16];
                     const dayNames = ['Pon 10.8', 'Uto 11.8', 'Sri 12.8', 'Čet 13.8', 'Pet 14.8', 'Sub 15.8', 'Ned 16.8'];
                     
                     let theadHtml = `<th class="p-3 font-bold text-slate-500 uppercase text-xs sticky left-0 bg-slate-50 dark:bg-slate-900/80 z-10 w-48 border-r border-slate-200 dark:border-slate-700">Djelatnik</th>`;
@@ -1000,7 +1050,7 @@
                         let rowHtml = `<td class="p-3 sticky left-0 bg-white dark:bg-slate-800 z-10 border-r border-slate-100 dark:border-slate-700 font-bold text-sm dark:text-white cursor-pointer hover:text-par-blue" onclick="window.openEmployeeDetails(${emp.id})">${emp.name}</td>`;
                         weekDays.forEach(dayNum => {
                             const schedule = DUMMY_DATA.employeeSchedules.find(s => s.empId === emp.id && s.day === dayNum) || { activity: '-', color: 'slate' };
-                            let shortActivity = schedule.activity.split(' ')[0]; // E.g., "Na", "Godišnji", "Bolovanje"
+                            let shortActivity = schedule.activity.split(' ')[0];
                             if (shortActivity === 'Na') shortActivity = 'Ured';
                             if (schedule.activity === 'Godišnji odmor (GO)') shortActivity = 'GO';
                             if (schedule.activity === 'Slobodan dan') shortActivity = 'Slob.';
@@ -1180,7 +1230,7 @@
                         </div>
                     `;
                 } else {
-                    const dvorane = ['Dvorana 1', 'Dvorana 2', 'IT Lab 1', 'IT Lab 2'];
+                    const dvorane = ['Dvorana PAR', 'Dvorana 1', 'Dvorana 2', 'Inkubator', 'IT Lab 1'];
                     const hours = [8, 10, 12, 14, 16, 18];
                     let ganttGrid = dvorane.map(dvorana => {
                         let slotsHtml = hours.map(h => {
@@ -1220,7 +1270,7 @@
             courses: (state) => `
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
                     <div><h2 class="text-3xl font-black text-slate-800 dark:text-white mb-2" tabindex="0">Kolegiji & Silabusi</h2><p class="text-slate-500 font-medium">Preuzimanje silabusa i detalji.</p></div>
-                    ${state.role === 'student' ? `<div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border shadow-sm"><span class="text-xs font-bold uppercase text-slate-400 mr-4">Upisani ECTS:</span><span class="text-2xl font-black text-par-blue">19 ECTS</span></div>` : ''}
+                    ${state.role === 'student' ? `<div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border shadow-sm"><span class="text-xs font-bold uppercase text-slate-400 mr-4">Upisani ECTS:</span><span class="text-2xl font-black text-par-blue">18 ECTS</span></div>` : ''}
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-1">
                     ${DUMMY_DATA.courses.map(c => {
@@ -1295,7 +1345,7 @@
                 <div class="flex justify-between items-end mb-8">
                     <div><h2 class="text-3xl font-black dark:text-white mb-2" tabindex="0">e-Referada</h2></div>
                     <div class="flex space-x-2">
-                        ${RBAC.hasPermission(state.role, 'view_all') ? `<button onclick="window.exportReferadaReport()" class="bg-white text-red-600 border border-slate-200 px-4 py-2.5 rounded-xl font-bold shadow-sm focus-visible:ring-2 hover:bg-slate-50 transition"><i class="fa-solid fa-file-pdf mr-2"></i>Export</button>` : ''}
+                        ${RBAC.hasPermission(state.role, 'view_all') ? `<button onclick="window.exportReferadaReport()" class="bg-white text-red-600 border border-slate-200 px-4 py-2.5 rounded-xl font-bold shadow-sm focus-visible:ring-2 hover:bg-slate-50 transition"><i class="fa-solid fa-file-pdf mr-2"></i>Mjesečno Izvješće</button>` : ''}
                         <button onclick="window.openModal('request-modal')" class="bg-par-blue text-white px-5 py-2.5 rounded-xl font-bold shadow-lg hover:bg-blue-800 transition focus-visible:ring-2"><i class="fa-solid fa-plus mr-2"></i>Nova zamolba</button>
                     </div>
                 </div>
@@ -1459,8 +1509,10 @@
             document.getElementById('modal-student-status').innerText = s.status;
             document.getElementById('modal-student-gpa').innerText = s.gpa;
             document.getElementById('modal-student-ects').innerText = s.ects;
+            
+            // Postavljanje opisa / Bio statusa
+            document.getElementById('modal-student-bio').innerHTML = `<strong>${s.name}</strong> je ${s.year === 'Alumni' ? 'bivši student (Alumni)' : 'upisan/a na ' + s.year + '. godinu preddiplomskog/diplomskog studija'}. Njegov trenutni status je <strong>${s.status}</strong> uz ukupan prosjek ocjena <strong>${s.gpa}</strong>. Do sada ima ostvarenih <strong>${s.ects} ECTS</strong> bodova. ${s.risk ? '<span class="text-red-500 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Detektiran je rizik odustajanja uslijed nižeg prosjeka.</span>' : '<span class="text-green-600 font-bold"><i class="fa-solid fa-circle-check"></i> Redovno ispunjava sve akademske obveze.</span>'}`;
 
-            // Finance button visibility
             const btnFinance = document.getElementById('btn-student-finance');
             const btnFinanceMobile = document.getElementById('btn-student-finance-mobile');
             if (RBAC.hasPermission(appStore.state.role, 'manage_finances')) {
@@ -1542,7 +1594,6 @@
                 s.tuitionModel = model;
                 s.tuitionDiscount = discount;
                 
-                // Update finance records visually based on this (dummy logic)
                 const total = base - (base * (discount / 100));
                 let financeRec = DUMMY_DATA.finances.find(f => f.studentId == studentId);
                 if(financeRec) {
@@ -1581,6 +1632,12 @@
                 tList.innerHTML = '<li class="text-slate-400 italic">Nema zabilježenih naloga.</li>';
             }
 
+            // Punjenje radova
+            document.getElementById('modal-emp-papers-drafting').innerHTML = e.papers.drafting.map(p => `<li class="text-sm font-medium text-slate-600 dark:text-slate-300 border-l-2 border-slate-300 dark:border-slate-600 pl-2 py-1">${p}</li>`).join('') || '<li class="text-sm text-slate-400 italic">Nema radova</li>';
+            document.getElementById('modal-emp-papers-review').innerHTML = e.papers.review.map(p => `<li class="text-sm font-medium text-slate-600 dark:text-slate-300 border-l-2 border-amber-400 pl-2 py-1">${p}</li>`).join('') || '<li class="text-sm text-slate-400 italic">Nema radova</li>';
+            document.getElementById('modal-emp-papers-published').innerHTML = e.papers.published.map(p => `<li class="text-sm font-medium text-slate-600 dark:text-slate-300 border-l-2 border-green-500 pl-2 py-1">${p}</li>`).join('') || '<li class="text-sm text-slate-400 italic">Nema radova</li>';
+
+
             window.openModal('employee-modal');
         };
 
@@ -1614,7 +1671,7 @@
                     <p style="font-size: 14px; margin-bottom: 30px; color: #64748b;">Nositelj: ${c.prof} | Opterećenje: ${c.opterećenje} | ECTS: ${c.ects}</p>
                     
                     <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #1e3a8a; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">Opis kolegija</h3>
-                    <p style="font-size: 14px; line-height: 1.6; margin-bottom: 30px;">${c.description}</p>
+                    <p style="font-size: 14px; line-height: 1.6; margin-bottom: 30px; text-align: justify;">${c.description}</p>
                     
                     <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #1e3a8a; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;">Ishodi učenja</h3>
                     <ul style="font-size: 14px; line-height: 1.6; margin-bottom: 30px; padding-left: 20px;">
@@ -1727,6 +1784,45 @@
             window.showToast('Priprema ispisa...', 'fa-print');
         };
 
+        window.exportRequestPDF = function(id) {
+            const req = DUMMY_DATA.requests.find(r => r.id === id);
+            if(!req) return;
+            
+            const historyHtml = req.history.map(h => `<tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 10px;">${h.d}</td><td style="padding: 10px;">${h.t}</td></tr>`).join('');
+            
+            const html = `
+                <div style="font-family: Arial, sans-serif; color: #0f172a; padding: 50px; background: white; width: 794px; height: 1123px; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden; position: relative; margin: 0 auto;">
+                    <div style="border-bottom: 3px solid #1e3a8a; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
+                        <h1 style="color: #1e3a8a; font-size: 28px; margin: 0; font-weight: 900;">VELEUČILIŠTE PAR</h1>
+                        <span style="font-size: 12px; color: #64748b;">e-Referada | Status dokumenta</span>
+                    </div>
+                    
+                    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">Izvadak iz evidencije o statusu zamolbe</h2>
+                    
+                    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                        <p style="font-size: 14px; margin: 5px 0;"><strong>ID Zahtjeva:</strong> #${202600 + req.id}</p>
+                        <p style="font-size: 14px; margin: 5px 0;"><strong>Student podnositelj:</strong> ${req.student}</p>
+                        <p style="font-size: 14px; margin: 5px 0;"><strong>Vrsta zahtjeva (Tip):</strong> ${req.type}</p>
+                        <p style="font-size: 14px; margin: 5px 0;"><strong>Trenutni status:</strong> <span style="font-weight: bold; color: ${req.status === 'Riješeno' ? '#16a34a' : '#ea580c'};">${req.status.toUpperCase()}</span></p>
+                    </div>
+
+                    <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #1e3a8a;">Detalji prijave</h3>
+                    <p style="font-size: 14px; margin-bottom: 30px;">${req.details}</p>
+
+                    <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #1e3a8a;">Lenta aktivnosti i promjene statusa</h3>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: left;">
+                        <thead><tr style="background: #f1f5f9; border-bottom: 2px solid #cbd5e1;"><th style="padding: 10px; width: 30%;">Vrijeme obrade</th><th style="padding: 10px;">Evidentirana akcija</th></tr></thead>
+                        <tbody>${historyHtml}</tbody>
+                    </table>
+
+                    <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 10px; color: #94a3b8; text-align: center;">
+                        Dokument služi kao službeni izvadak praćenja obrade iz ERP sustava.
+                    </div>
+                </div>
+            `;
+            window.exportOffScreenPDF(html, `Zamolba_Izvadak_${req.id}.pdf`);
+        }
+
         window.exportReferadaReport = function() {
             const reqs = DUMMY_DATA.requests;
             const total = reqs.length;
@@ -1798,7 +1894,7 @@
                         <p style="font-size: 14px; margin-bottom: 10px;">Potvrđuje se da je student / studentica:</p>
                         <h3 style="font-size: 24px; color: #1e3a8a; font-weight: bold; margin: 0 0 20px 0;">${studentName}</h3>
                         <p style="font-size: 14px; margin: 5px 0;"><strong>JMBAG:</strong> ${jmbag}</p>
-                        <p style="font-size: 14px; margin: 5px 0;"><strong>Studijski program:</strong> Diplomski stručni studij Poslovnog upravljanja</p>
+                        <p style="font-size: 14px; margin: 5px 0;"><strong>Studijski program:</strong> Stručni studij Poslovnog upravljanja</p>
                         <p style="font-size: 14px; margin: 5px 0;"><strong>Akademska godina:</strong> 2026./2027.</p>
                         <p style="font-size: 14px; margin: 5px 0;"><strong>Status studenta:</strong> Redoviti student u punom radnom vremenu</p>
                     </div>
@@ -1878,7 +1974,8 @@
                 date: `${dateStr} ${timeStr}`,
                 status: 'Na čekanju',
                 priority: 'Srednji',
-                history: [{d: timeStr, t: `Zamolba predana. Napomena: ${note}`}]
+                history: [{d: timeStr, t: `Zamolba predana. Napomena: ${note}`}],
+                details: `Ovaj zahtjev generiran je od strane korisnika ${appStore.state.user.name}. Napomena: ${note}`
             });
             window.closeModal('request-modal');
             window.showToast('Zamolba je poslana u referadu!', 'fa-paper-plane');
@@ -1989,7 +2086,12 @@
             document.getElementById('td-type').innerText = req.type;
             let statusColor = req.status === 'Riješeno' ? 'bg-green-100 text-green-700' : (req.status === 'U obradi' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600');
             document.getElementById('td-student').innerHTML = `<i class="fa-solid fa-user-graduate mr-1"></i>${req.student} <span class="ml-2 text-[10px] uppercase font-bold px-2 py-0.5 rounded ${statusColor}">${req.status}</span>`;
+            
+            document.getElementById('td-details').innerText = req.details || 'Nema dodatnih detalja.';
+            
             document.getElementById('td-timeline').innerHTML = req.history.map((h, i) => `<div class="relative pl-6"><span class="absolute -left-[9px] top-1 w-4 h-4 rounded-full ${i===req.history.length-1&&req.status==='Riješeno'?'bg-green-500':'bg-par-blue'} border-4 border-white dark:border-slate-900 shadow-sm"></span><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${h.d}</p><p class="text-sm font-bold dark:text-slate-200">${h.t}</p></div>`).join('');
+            
+            document.getElementById('btn-export-request-pdf').onclick = () => window.exportRequestPDF(id);
             window.openModal('request-details-modal');
         };
 
