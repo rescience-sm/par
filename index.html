@@ -62,6 +62,20 @@
             body { background: white !important; color: black !important; }
             .print-full-width { width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border: none !important; }
         }
+
+        /* Evaluacija styles */
+        .eval-star-rating i { cursor: pointer; transition: color 0.2s; }
+        .eval-star-rating i.active, .eval-star-rating i:hover { color: #fbbf24; }
+        .eval-question-block { page-break-inside: avoid; margin-bottom: 20px; }
+        .eval-textarea { resize: none; border-bottom: 1px dotted #cbd5e1; }
+        
+        #eval-module-container { z-index: 9999; }
+        
+        @media print {
+            #eval-module-container { position: absolute; top: 0; left: 0; width: 100%; display: block !important; background: white !important; }
+            #eval-pdf-area { box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; }
+            .eval-textarea { border: none !important; border-bottom: 1px dotted #94a3b8 !important; background: transparent !important; min-height: 40px !important; padding: 5px 0 !important; overflow: hidden !important; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200 min-h-screen flex transition-colors duration-300 overflow-x-hidden">
@@ -478,7 +492,7 @@
         </div>
     </div>
 
-    <!-- TUITION CONFIG MODAL (Updated) -->
+    <!-- TUITION CONFIG MODAL -->
     <div id="tuition-config-modal" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-900/80 z-[130] hidden items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col slide-up border border-slate-200 dark:border-slate-700">
             <div class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-6 flex justify-between items-center shrink-0">
@@ -565,6 +579,137 @@
             <i id="toast-icon" class="fa-solid fa-check text-green-400 dark:text-green-600"></i>
         </div>
         <span id="toast-msg">Spremljeno.</span>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- POČETAK MODULA ZA EVALUACIJU ERP SUSTAVA S A4 PDF IZVOZOM   -->
+    <!-- ========================================================= -->
+
+    <!-- Gumb za otvaranje modula smješten dolje Ljevo -->
+    <button onclick="window.openEvalModule()" class="fixed bottom-6 left-6 z-[90] bg-gradient-to-tr from-par-dark to-slate-700 border-2 border-slate-500 text-white p-4 rounded-full shadow-2xl hover:scale-105 transition-transform group flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 no-print focus:outline-none focus:ring-4 focus:ring-par-gold" aria-label="Otvori Evaluacijski Upitnik">
+        <i class="fa-solid fa-clipboard-question text-xl sm:text-2xl text-par-gold"></i>
+        <span class="absolute left-20 bg-slate-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-lg border border-slate-700">Otvori ERP Upitnik</span>
+    </button>
+
+    <!-- Overlay Modula za Evaluaciju -->
+    <div id="eval-module-container" class="fixed inset-0 bg-slate-100 dark:bg-slate-900 z-[200] hidden flex-col overflow-hidden transition-opacity duration-300 print:block print:relative print:z-auto print:bg-white" aria-modal="true" role="dialog">
+        
+        <!-- Zaglavlje -->
+        <header class="bg-par-dark text-white p-4 shadow-md shrink-0 no-print">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white p-1.5 rounded text-par-dark font-black text-xl tracking-tighter leading-none">PAR<span class="text-par-red">.</span></div>
+                    <div><h1 class="font-bold text-lg leading-tight">Evaluacija ERP Prototipa</h1><p class="text-xs text-slate-400">Interni feedback modul</p></div>
+                </div>
+                <button onclick="window.closeEvalModule()" class="text-slate-400 hover:text-white transition w-10 h-10 rounded-full flex items-center justify-center bg-slate-800"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+        </header>
+
+        <div class="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-6 flex flex-col md:flex-row gap-6 overflow-hidden no-print">
+            
+            <!-- Sidebar zaposlenika -->
+            <aside class="w-full md:w-80 shrink-0 flex flex-col h-full bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <div class="p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+                    <h2 class="font-bold text-slate-700 dark:text-white"><i class="fa-solid fa-users text-par-blue mr-2"></i>Odaberite djelatnika</h2>
+                </div>
+                <div class="p-3 flex-1 overflow-hidden flex flex-col">
+                    <div class="relative mb-3 shrink-0">
+                        <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-sm"></i>
+                        <input type="text" id="eval-search-emp" onkeyup="window.filterEvalEmployees()" placeholder="Pretraži..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 py-2 text-sm outline-none focus:border-par-blue dark:text-white transition-all">
+                    </div>
+                    <ul id="eval-employee-list" class="flex-1 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
+                        <!-- Popunjava JS -->
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Forma upitnika -->
+            <section class="flex-1 overflow-y-auto custom-scrollbar pb-10">
+                <div id="eval-welcome" class="h-full min-h-[400px] flex flex-col items-center justify-center bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 border-dashed p-12 text-center">
+                    <i class="fa-solid fa-clipboard-check text-6xl text-slate-200 dark:text-slate-700 mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-700 dark:text-white mb-2">Evaluacija sustava po odjelima</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">Odaberite osobu iz izbornika kako biste učitali prilagođena pitanja temeljem njene specifične uloge.</p>
+                </div>
+
+                <div id="eval-form-container" class="hidden flex flex-col slide-up">
+                    
+                    <!-- KONTEJNER ZA A4 PDF EXPORT -->
+                    <div id="eval-pdf-area" class="bg-white rounded-2xl shadow-sm border border-slate-200 print-container" style="padding: 15mm; background: white;">
+                        
+                        <div class="border-b border-slate-200 pb-6 mb-6 relative">
+                            <div class="absolute top-0 right-0 text-slate-200 hidden print:block">
+                                 <div class="font-black text-3xl tracking-tighter text-slate-300">PAR<span class="text-slate-400">.</span></div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div id="eval-ui-initials" class="w-16 h-16 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-2xl font-black text-slate-500 shrink-0"></div>
+                                <div>
+                                    <h2 id="eval-ui-name" class="text-2xl font-black text-slate-800 mb-1">Ime Prezime</h2>
+                                    <p id="eval-ui-title" class="text-sm font-bold text-par-blue">Titula</p>
+                                    <p id="eval-ui-dept" class="text-xs text-slate-500 font-medium uppercase tracking-wider mt-1"><i class="fa-solid fa-building mr-1"></i> <span id="eval-ui-dept-text">Odjel</span></p>
+                                </div>
+                            </div>
+                            <div class="text-xs font-bold text-slate-500 mt-4 bg-slate-50 p-2 rounded inline-block">
+                                <i class="fa-regular fa-clock mr-1"></i> Ispunjeno: <span id="eval-timestamp-top"></span>
+                            </div>
+                        </div>
+
+                        <form id="eval-questions-form" class="space-y-6">
+                            <div class="mb-2">
+                                <h3 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-2 border-b border-slate-100 pb-2">Prilagođena pitanja za evaluaciju ERP procesa</h3>
+                            </div>
+
+                            <div id="eval-questions-wrapper" class="space-y-6">
+                                <!-- Generira JS -->
+                            </div>
+
+                            <!-- Opća pitanja - spriječavamo lomljenje unutar elementa pri printu -->
+                            <div class="border-t border-slate-200 pt-6 mt-6 eval-question-block" style="page-break-inside: avoid;">
+                                <h3 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-4 border-b border-slate-100 pb-2">Opća procjena korisničkog iskustva</h3>
+                                
+                                <div class="mb-6">
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Imate li dodatnih prijedloga za tehničku prilagodbu:</label>
+                                    <textarea oninput="this.textContent = this.value" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-700 outline-none focus:border-par-blue transition-all min-h-[80px] eval-textarea"></textarea>
+                                </div>
+
+                                <div class="flex items-center space-x-4 no-print">
+                                    <label class="text-sm font-bold text-slate-700">Ocjena dizajna i prototipa:</label>
+                                    <div class="eval-star-rating text-2xl text-slate-300 space-x-1" id="eval-star-container">
+                                        <i class="fa-solid fa-star" data-rating="1"></i>
+                                        <i class="fa-solid fa-star" data-rating="2"></i>
+                                        <i class="fa-solid fa-star" data-rating="3"></i>
+                                        <i class="fa-solid fa-star" data-rating="4"></i>
+                                        <i class="fa-solid fa-star" data-rating="5"></i>
+                                    </div>
+                                    <input type="hidden" id="eval-selected-rating" value="0">
+                                </div>
+                                <div class="hidden print:block text-sm font-bold text-slate-700">
+                                    Korisnička ocjena: <span id="eval-print-rating" class="text-par-blue">Nije ocjenjeno</span> / 5
+                                </div>
+                            </div>
+                            
+                            <!-- Podnožje Print dokumenta -->
+                            <div class="hidden print:flex mt-12 pt-4 border-t border-slate-300 justify-between items-end" style="page-break-inside: avoid;">
+                                <div class="text-[10px] text-slate-500 leading-tight">
+                                    Službeni interni upitnik za razvoj ERP arhitekture Veleučilišta PAR.<br>
+                                    Dokument generiran: <span id="eval-print-date"></span>
+                                </div>
+                                <div class="text-center w-40 border-t border-slate-400 pt-1 text-xs font-bold text-slate-600">
+                                    Potpis zaposlenika
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Gumb prebačen na dno forme kako je zatraženo -->
+                    <div class="mt-6 flex justify-end no-print">
+                        <button onclick="window.generateEvalPDF()" class="bg-par-blue hover:bg-blue-800 text-white px-6 py-3.5 rounded-xl font-bold shadow-lg transition-all flex items-center text-sm hover:scale-105 active:scale-95">
+                            <i class="fa-solid fa-file-pdf text-red-400 mr-2 text-lg"></i> Preuzmi ispunjeni PDF
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+        </div>
     </div>
 
     <!-- SCRIPT APPLICATION CONTROLLER -->
@@ -1153,7 +1298,6 @@
             nav.innerHTML = html;
         }
 
-        /* Drag and Drop Kurs za Raspored */
         let draggedCourseId = null;
         window.handleCourseDragStart = function(e, courseId) {
             draggedCourseId = courseId;
@@ -2116,6 +2260,242 @@
             buildNavigation();
             renderActiveView(state);
         });
+
+        // ====================================================================
+        // JS LOGIKA EVALUACIJSKOG MODULA (Točno prilagođeno prema slici)
+        // ====================================================================
+
+        const EVAL_DATA = [
+            { 
+                id: 'gnikolic', name: 'Gordana Nikolić', title: 'izv. prof. dr. sc., dekanica', department: 'Uprava / Dekanat',
+                questions: [
+                    "Prikazuje li Vam nadzorna ploča sve potrebne financijske statuse i agregirane podatke o aktivnim EU projektima?",
+                    "Smatrate li proces odobravanja i praćenja godišnjih odmora u sustavu dovoljno transparentnim za upravljanje timom?",
+                    "Odgovaraju li ponuđeni modeli plaćanja (rate/jednokratno) i izračuni popusta školarina stvarnim financijskim politikama Veleučilišta?"
+                ]
+            },
+            { 
+                id: 'mjurkovic', name: 'Martina Jurković', title: 'mag. oec.', department: 'Ured za kvalitetu',
+                questions: [
+                    "Omogućuju li Vam izvještaji u ERP-u praćenje prolaznosti i uspješnosti studenata putem prikaza distribucije ocjena?",
+                    "Postoje li specifične metrike koje Vam nedostaju u sustavu za kvalitetniju evaluaciju rada nastavnika?",
+                    "Kako ocjenjujete modul za pregled silabusa i ishoda učenja u kolegijima u svrhu osiguravanja kvalitete nastave?"
+                ]
+            },
+            { 
+                id: 'msrdoc', name: 'Marina Srdoč', title: 'univ. mag. iur.', department: 'Tajništvo',
+                questions: [
+                    "Ubrzava li sučelje e-Referade Vašu dnevnu obradu studentskih zamolbi, potvrda o statusu i prijepisa ocjena?",
+                    "Generira li sustav PDF potvrde u vizualnom obliku koji odgovara standardnim službenim predlošcima ustanove?",
+                    "Olakšava li Vam aplikacija filtriranje i izdvajanje riješenih e-Zamolbi od onih koje su na čekanju?"
+                ]
+            },
+            { 
+                id: 'mmilosevic', name: 'Monica Milošević', title: 'mag. oec., MBA', department: 'Evidencija studija | Centar za karijere',
+                questions: [
+                    "Pruža li dizajn kartice studenta sve ključne informacije na jednom mjestu (ECTS bodovi, JMBAG, status i prosjek)?",
+                    "Pomaže li Vam automatski generator 2D barkodova pri izdavanju računa i zaduženja za upisnine?",
+                    "Pruža li Alumni modul dovoljno mogućnosti za vođenje baze bivših studenata i poslodavaca za Centar za karijere?"
+                ]
+            },
+            { 
+                id: 'gabubakr', name: 'Gordana Abu Bakr', title: 'Mr. sc. pp. tp.', department: 'Ured za cjeloživotno obrazovanje',
+                questions: [
+                    "Može li se u postojećoj strukturi jasno pratiti evidencija polaznika neformalnih edukacija i tečajeva odvojeno od redovnih studenata?",
+                    "Odgovaraju li financijski moduli potrebama naplate specifičnih kratkih programa izvan standardnih obročnih školarina?",
+                    "Pomaže li Vam interaktivni kalendar u organizaciji i praćenju zauzetosti dvorana za edukacije cjeloživotnog učenja?"
+                ]
+            },
+            { 
+                id: 'dmanestar', name: 'Dragana Manestar Vuksan', title: 'prof., univ. spec. philol.', department: 'Ured za izdavačku djelatnost',
+                questions: [
+                    "Može li se modul 'Znanost i Istraživanje' adekvatno iskoristiti za praćenje statusa izdavanja stručnih publikacija i zbornika?",
+                    "Smatrate li da aplikaciji nedostaje posebna kategorija za evidentiranje autorstva udžbenika i knjiga?",
+                    "Koliko Vam je olakšana komunikacija i praćenje radova nastavnika putem predloženog digitalnog DMS sučelja?"
+                ]
+            },
+            { 
+                id: 'itijan', name: 'Iva Tijan', title: 'mag. philol. angl. et paed.', department: 'Ured za međunarodnu suradnju',
+                questions: [
+                    "Pruža li Vam modul 'EU Projekti' dovoljno opcija za vođenje Erasmus+ programa (budžeti, radni paketi, partneri)?",
+                    "Kako Vam ERP sustav pomaže u organizaciji i praćenju dolaznih i odlaznih mobilnosti studenata?",
+                    "Je li modul putnih naloga unutar kartica zaposlenika dovoljno informativan za praćenje odlazne mobilnosti osoblja?"
+                ]
+            },
+            { 
+                id: 'mmaslac', name: 'Mia Maslać', title: 'univ. mag. oec.', department: 'Ured za međunarodnu suradnju',
+                questions: [
+                    "Je li proces evidentiranja dolazne mobilnosti međunarodnih studenata jasan unutar baze 'Studenti'?",
+                    "Nedostaje li Vam posebna funkcionalnost za lakše pretraživanje ugovora o međunarodnoj suradnji u DMS modulu?",
+                    "Kako ocjenjujete unos specifičnih podataka (vize, osiguranja) u karton inozemnog studenta?"
+                ]
+            },
+            { 
+                id: 'mvukadinovic', name: 'Mašenka Vukadinović', title: 'PR i Marketing', department: 'PR i Marketing',
+                questions: [
+                    "Pomaže li Vam Alumni i Event modul u planiranju, organizaciji i marketinškom praćenju javnih događanja Veleučilišta?",
+                    "Imate li kroz sustav brz uvid u nove znanstvene radove i projekte (EU Projekti) u svrhu kreiranja PR sadržaja?",
+                    "Omogućuje li Vam kalendar jasno izdvajanje promotivnih evenata u odnosu na redovnu nastavu?"
+                ]
+            },
+            { 
+                id: 'sdoricic', name: 'Sunčana Doričić', title: 'MA (ili mag.)', department: 'Ured za međunarodnu suradnju',
+                questions: [
+                    "Olakšava li vizualni prikaz modula projekata planiranje i administraciju aktivnosti međunarodne suradnje?",
+                    "Smatrate li kalendarski modul korisnim za praćenje termina gostujućih međunarodnih predavača?",
+                    "Pomaže li Vam praćenje budžeta unutar EU projekata pri realizaciji planiranih troškova mobilnosti?"
+                ]
+            },
+            { 
+                id: 'dspoljar', name: 'Dominik Špoljar', title: 'Informatička služba', department: 'Informatička služba',
+                questions: [
+                    "Pokriva li modul za laboratorij sve statuse (dostupno, zaduženo, servis) potrebne za vođenje hardverskog inventara?",
+                    "Smatrate li da 'live' notifikacije i PAR AI asistent mogu poslužiti za smanjenje broja osnovnih tehničkih upita korisnika?",
+                    "Je li sučelje za evidenciju tehnike i opreme (npr. VR, Arduino) dovoljno fleksibilno za unos novih resursa?",
+                    "Trebaju li se unutar sustava implementirati dodatna sigurnosna i autorizacijska ograničenja (RBAC)?"
+                ]
+            }
+        ];
+
+        let currentEvalEmp = null;
+
+        window.openEvalModule = function() {
+            document.getElementById('eval-module-container').classList.remove('hidden');
+            document.getElementById('eval-module-container').classList.add('flex');
+            renderEvalEmployees(EVAL_DATA);
+        };
+
+        window.closeEvalModule = function() {
+            document.getElementById('eval-module-container').classList.add('hidden');
+            document.getElementById('eval-module-container').classList.remove('flex');
+        };
+
+        function renderEvalEmployees(data) {
+            const list = document.getElementById('eval-employee-list');
+            list.innerHTML = '';
+            
+            data.forEach(emp => {
+                const initials = emp.name.replace(/(prof\.|dr\.|sc\.|doc\.|pred\.|v\.|izv\.)/g, '').trim().charAt(0).toUpperCase();
+                
+                list.innerHTML += `
+                    <button onclick="window.selectEvalEmployee('${emp.id}')" id="eval-btn-${emp.id}" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-transparent focus-visible:ring-2 focus-visible:ring-par-blue">
+                        <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold shadow-sm shrink-0">${initials}</div>
+                        <div class="overflow-hidden">
+                            <h4 class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">${emp.name}</h4>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wide truncate">${emp.department}</p>
+                        </div>
+                    </button>
+                `;
+            });
+        }
+
+        window.filterEvalEmployees = function() {
+            const query = document.getElementById('eval-search-emp').value.toLowerCase();
+            const filtered = EVAL_DATA.filter(e => e.name.toLowerCase().includes(query) || e.department.toLowerCase().includes(query));
+            renderEvalEmployees(filtered);
+            highlightActiveEvalEmp();
+        };
+
+        window.selectEvalEmployee = function(id) {
+            currentEvalEmp = EVAL_DATA.find(e => e.id === id);
+            if (!currentEvalEmp) return;
+
+            document.getElementById('eval-welcome').classList.add('hidden');
+            document.getElementById('eval-form-container').classList.remove('hidden');
+
+            highlightActiveEvalEmp();
+            populateEvalForm();
+        };
+
+        function highlightActiveEvalEmp() {
+            if (!currentEvalEmp) return;
+            document.querySelectorAll('#eval-employee-list button').forEach(b => {
+                b.classList.remove('bg-blue-50', 'dark:bg-blue-900/30', 'border-blue-200', 'dark:border-blue-800');
+            });
+            const activeBtn = document.getElementById(`eval-btn-${currentEvalEmp.id}`);
+            if (activeBtn) activeBtn.classList.add('bg-blue-50', 'dark:bg-blue-900/30', 'border-blue-200', 'dark:border-blue-800');
+        }
+
+        function populateEvalForm() {
+            document.getElementById('eval-ui-initials').innerText = currentEvalEmp.name.replace(/(prof\.|dr\.|sc\.|doc\.|pred\.|v\.|izv\.)/g, '').trim().charAt(0).toUpperCase();
+            document.getElementById('eval-ui-name').innerText = currentEvalEmp.name;
+            document.getElementById('eval-ui-title').innerText = currentEvalEmp.title;
+            document.getElementById('eval-ui-dept-text').innerText = currentEvalEmp.department;
+            
+            // Postavi timestamp kada je forma učitana
+            const now = new Date();
+            const ts = now.toLocaleDateString('hr-HR') + ' u ' + now.toLocaleTimeString('hr-HR', {hour: '2-digit', minute: '2-digit'});
+            document.getElementById('eval-timestamp-top').innerText = ts;
+            document.getElementById('eval-print-date').innerText = ts;
+
+            // Reset zvjezdica
+            document.getElementById('eval-selected-rating').value = 0;
+            document.getElementById('eval-print-rating').innerText = "Nije ocjenjeno";
+            document.querySelectorAll('#eval-star-container i').forEach(star => {
+                star.classList.remove('active', 'text-par-gold');
+                star.classList.add('text-slate-300');
+            });
+
+            const wrapper = document.getElementById('eval-questions-wrapper');
+            wrapper.innerHTML = '';
+
+            // Renderiranje pitanja pazeći na page-break (page-break-inside: avoid osigurava da se ne prelamaju)
+            currentEvalEmp.questions.forEach((q, index) => {
+                wrapper.innerHTML += `
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 eval-question-block print:bg-transparent print:border-none print:p-0 print:border-b print:border-slate-300 print:rounded-none" style="page-break-inside: avoid;">
+                        <label class="block text-sm font-bold text-slate-800 mb-2">
+                            <span class="text-par-blue mr-1.5">${index + 1}.</span> ${q}
+                        </label>
+                        <textarea oninput="this.textContent = this.value" class="w-full bg-white border border-slate-200 rounded-lg p-3 text-sm text-slate-700 outline-none focus:border-par-blue min-h-[70px] eval-textarea" placeholder="Upišite odgovor..."></textarea>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('eval-form-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Star rating Logika
+        document.querySelectorAll('#eval-star-container i').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-rating');
+                document.getElementById('eval-selected-rating').value = rating;
+                document.getElementById('eval-print-rating').innerText = rating;
+                
+                document.querySelectorAll('#eval-star-container i').forEach(s => {
+                    if (s.getAttribute('data-rating') <= rating) {
+                        s.classList.add('active', 'text-par-gold');
+                        s.classList.remove('text-slate-300');
+                    } else {
+                        s.classList.remove('active', 'text-par-gold');
+                        s.classList.add('text-slate-300');
+                    }
+                });
+            });
+        });
+
+        // Generiranje A4 formatiranog PDF-a
+        window.generateEvalPDF = function() {
+            if (!currentEvalEmp) return;
+            window.showToast("Priprema A4 PDF dokumenta za izvoz...", "fa-spinner fa-spin");
+
+            const element = document.getElementById('eval-pdf-area');
+            
+            const opt = {
+                margin:       10, // Margine su prilagođene na 10mm po A4 standardu
+                filename:     `PAR_ERP_Evaluacija_${currentEvalEmp.name.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['css', 'legacy'] } 
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                window.showToast("PDF upitnik uspješno generiran!", "fa-circle-check");
+            }).catch(err => {
+                window.showToast("Greška pri izradi PDF-a.", "fa-triangle-exclamation");
+                console.error(err);
+            });
+        };
     </script>
 </body>
 </html>
